@@ -36,7 +36,7 @@ export default function QuizList({ assessments }) {
                 Review your past quiz performance
               </CardDescription>
             </div>
-            <Button onClick={() => router.push("/interview/mock")}>
+            <Button variant="success" onClick={() => router.push("/interview/mock")}>
               Start New Quiz
             </Button>
           </div>

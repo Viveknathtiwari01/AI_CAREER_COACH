@@ -76,7 +76,7 @@ const DashboardView = ({ insights }) => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <Badge variant="outline">Last updated: {lastUpdatedDate}</Badge>
+        <Badge variant="success">Last updated: {lastUpdatedDate}</Badge>
       </div>
 
       {/* Market Overview Cards */}
@@ -175,9 +175,9 @@ const DashboardView = ({ insights }) => {
                     return null;
                   }}
                 />
-                <Bar dataKey="min" fill="#94a3b8" name="Min Salary (K)" />
-                <Bar dataKey="median" fill="#64748b" name="Median Salary (K)" />
-                <Bar dataKey="max" fill="#475569" name="Max Salary (K)" />
+                <Bar dataKey="min" fill="#24bacc" name="Min Salary (K)" />
+                <Bar dataKey="median" fill="#ef4444" name="Median Salary (K)" />
+                <Bar dataKey="max" fill="#d946ef" name="Max Salary (K)" />
               </BarChart>
             </ResponsiveContainer>
           </div>

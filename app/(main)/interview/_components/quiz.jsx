@@ -153,8 +153,10 @@ export default function Quiz() {
         {!showExplanation && (
           <Button
             onClick={() => setShowExplanation(true)}
-            variant="outline"
+            variant="success"
             disabled={!answers[currentQuestion]}
+
+            
           >
             Show Explanation
           </Button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Trophy, CheckCircle2, XCircle } from "lucide-react";
+import { Trophy, CheckCircle2, XCircle, AlertTriangle,  CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -29,14 +29,20 @@ export default function QuizResult({
         {/* Improvement Tip */}
         {result.improvementTip && (
           <div className="bg-muted p-4 rounded-lg">
-            <p className="font-medium">Improvement Tip:</p>
+            <p className="font-medium text-red-500 flex items-center gap-2">
+            <AlertTriangle className="h-4 w-4" />
+                Improvement Tip:
+            </p>
             <p className="text-muted-foreground">{result.improvementTip}</p>
           </div>
         )}
 
         {/* Questions Review */}
         <div className="space-y-4">
-          <h3 className="font-medium">Question Review</h3>
+        <h3 className="font-medium text-green-600 flex items-center gap-2">
+          <CheckCircle className="h-4 w-4" />
+        Question Review
+        </h3>
           {result.questions.map((q, index) => (
             <div key={index} className="border rounded-lg p-4 space-y-2">
               <div className="flex items-start justify-between gap-2">
@@ -52,7 +58,7 @@ export default function QuizResult({
                 {!q.isCorrect && <p>Correct answer: {q.answer}</p>}
               </div>
               <div className="text-sm bg-muted p-2 rounded">
-                <p className="font-medium">Explanation:</p>
+                <p className="font-medium ">Explanation:</p>
                 <p>{q.explanation}</p>
               </div>
             </div>
