@@ -3,6 +3,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import Header from "@/components/header";
+import Footer from "@/components/footer";
 import { ThemeProvider } from "@/components/theme-provider";
 import { dark } from "@clerk/themes";
 
@@ -22,7 +23,8 @@ export default function RootLayout({ children }) {
     >
       <html lang="en" suppressHydrationWarning>
         <head>
-          <link rel="icon" href="/logo.png" sizes="any" />
+          <link rel="icon" href="/favicon.png" type="image/png" />
+          <link rel="shortcut icon" href="/favicon.png" type="image/png" />
         </head>
         <body className={`${inter.className}`}>
           <ThemeProvider
@@ -34,12 +36,7 @@ export default function RootLayout({ children }) {
             <Header />
             <main className="min-h-screen">{children}</main>
             <Toaster richColors />
-
-            <footer className=" py-12">
-              <div className="container mx-auto px-4 text-center text-gray-200">
-                <p>Made with 💗 by Vivek Nath Tiwari</p>
-              </div>
-            </footer>
+            <Footer />
           </ThemeProvider>
         </body>
       </html>
