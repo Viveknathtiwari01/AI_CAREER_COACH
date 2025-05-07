@@ -23,7 +23,6 @@ import useFetch from "@/hooks/use-fetch";
 import { useUser } from "@clerk/nextjs";
 import { entriesToMarkdown } from "@/app/lib/helper";
 import { resumeSchema } from "@/app/lib/schema";
-import html2pdf from "html2pdf.js/dist/html2pdf.min.js";
 
 export default function ResumeBuilder({ initialContent }) {
   const [activeTab, setActiveTab] = useState("edit");
@@ -84,7 +83,7 @@ export default function ResumeBuilder({ initialContent }) {
   const getContactMarkdown = () => {
     const { contactInfo } = formValues;
     const parts = [];
-    if (contactInfo.email) parts.push(`📧 ${contactInfo.email}`);
+    if (contactInfo.email) parts.push(`📧 [${contactInfo.email}](mailto:${contactInfo.email})`);
     if (contactInfo.mobile) parts.push(`📱 ${contactInfo.mobile}`);
     if (contactInfo.linkedin)
       parts.push(`💼 [LinkedIn](${contactInfo.linkedin})`);
@@ -115,18 +114,117 @@ export default function ResumeBuilder({ initialContent }) {
   const generatePDF = async () => {
     setIsGenerating(true);
     try {
+      const html2pdf = (await import('html2pdf.js')).default;
+      
       const element = document.getElementById("resume-pdf");
+      if (!element) {
+        throw new Error("PDF element not found");
+      }
+
+      // Create a clone of the element with simplified styles
+      const clone = element.cloneNode(true);
+      
+      // Override all styles with standard CSS
+      const styleOverrides = `
+        * {
+          color: #000000 !important;
+          background-color: #ffffff !important;
+          border-color: #e5e7eb !important;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+          color: #000000 !important;
+          font-weight: bold !important;
+        }
+        
+        a {
+          color: #2563eb !important;
+          text-decoration: underline !important;
+        }
+        
+        code {
+          background-color: #f3f4f6 !important;
+          color: #000000 !important;
+        }
+        
+        pre {
+          background-color: #f3f4f6 !important;
+          border: 1px solid #e5e7eb !important;
+        }
+        
+        blockquote {
+          border-left: 4px solid #e5e7eb !important;
+          color: #4b5563 !important;
+        }
+      `;
+
+      // Create and append style element
+      const styleElement = document.createElement('style');
+      styleElement.textContent = styleOverrides;
+      clone.appendChild(styleElement);
+
+      // Set base styles
+      clone.style.cssText = `
+        background: #ffffff !important;
+        color: #000000 !important;
+        font-family: Arial, sans-serif !important;
+        padding: 20px !important;
+        width: 210mm !important;
+        min-height: 297mm !important;
+        margin: 0 auto !important;
+      `;
+
+      // Remove any problematic classes
+      clone.className = '';
+
+      // Add the clone to the document temporarily
+      const container = document.createElement('div');
+      container.style.position = 'absolute';
+      container.style.left = '-9999px';
+      container.appendChild(clone);
+      document.body.appendChild(container);
+
       const opt = {
         margin: [15, 15],
         filename: "resume.pdf",
         image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        html2canvas: { 
+          scale: 2,
+          useCORS: true,
+          logging: true,
+          backgroundColor: '#ffffff',
+          windowWidth: 794,
+          windowHeight: 1123,
+          onclone: (clonedDoc) => {
+            // Additional processing on the cloned document if needed
+            console.log('Document cloned successfully');
+          }
+        },
+        jsPDF: { 
+          unit: "mm", 
+          format: "a4", 
+          orientation: "portrait",
+          compress: true
+        },
       };
 
-      await html2pdf().set(opt).from(element).save();
+      try {
+        await html2pdf().set(opt).from(clone).save();
+        toast.success("PDF generated successfully!");
+      } catch (pdfError) {
+        console.error("PDF generation specific error:", pdfError);
+        throw pdfError;
+      } finally {
+        // Clean up
+        document.body.removeChild(container);
+      }
     } catch (error) {
-      console.error("PDF generation error:", error);
+      console.error("PDF generation error details:", {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      });
+      toast.error(`Failed to generate PDF: ${error.message}`);
     } finally {
       setIsGenerating(false);
     }
@@ -402,12 +500,38 @@ export default function ResumeBuilder({ initialContent }) {
             />
           </div>
           <div className="hidden">
-            <div id="resume-pdf">
+            <div id="resume-pdf" style={{
+              background: "#ffffff",
+              color: "#000000",
+              padding: "20px",
+              fontFamily: "Arial, sans-serif",
+              width: "210mm",
+              minHeight: "297mm"
+            }}>
               <MDEditor.Markdown
                 source={previewContent}
                 style={{
-                  background: "white",
-                  color: "black",
+                  background: "#ffffff",
+                  color: "#000000",
+                  fontFamily: "Arial, sans-serif",
+                  fontSize: "12pt",
+                  lineHeight: "1.5"
+                }}
+                components={{
+                  a: ({ href, children }) => (
+                    <a 
+                      href={href} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      style={{
+                        color: "#2563eb",
+                        textDecoration: "underline",
+                        cursor: "pointer"
+                      }}
+                    >
+                      {children}
+                    </a>
+                  )
                 }}
               />
             </div>

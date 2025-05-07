@@ -1,6 +1,5 @@
-// app/resume/_components/entry-form.jsx
 "use client";
-
+//app/resume/_components/entry-form.jsx
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
