@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
         baseTheme: dark,
       }}
     >
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en" suppressHydrationWarning className="dark">
         <head>
           <link rel="icon" href="/favicon.png" type="image/png" />
           <link rel="shortcut icon" href="/favicon.png" type="image/png" />
@@ -30,7 +30,8 @@ export default function RootLayout({ children }) {
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
-            enableSystem
+            forcedTheme="dark"
+            enableSystem={false}
             disableTransitionOnChange
           >
             <Header />

@@ -27,7 +27,7 @@ export default function Footer() {
     {
       name: "Email",
       icon: <Mail className="h-5 w-5" />,
-      href: "viveknathtiwari01@gmail.com",
+      href: "viveknath",
     },
   ];
 
