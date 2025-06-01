@@ -7,6 +7,7 @@ import {
   GraduationCap,
   ChevronDown,
   StarsIcon,
+  Briefcase,
 } from "lucide-react";
 import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
@@ -79,6 +80,18 @@ export default async function Header() {
                   <Link href="/interview" className="flex items-center gap-2">
                     <GraduationCap className="h-4 w-4" />
                     Interview Prep
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/ats-score" className="flex items-center gap-2">
+                    <FileText className="h-4 w-4" />
+                    ATS Score
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/job-suitability" className="flex items-center gap-2">
+                    <Briefcase className="h-4 w-4" />
+                    Job Suitability
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
